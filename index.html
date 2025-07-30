@@ -23,13 +23,21 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       background-size: cover;
+      background-repeat: no-repeat;
       background-position: center;
       filter: brightness(0.4);
       z-index: -1;
       transition: background-image 1s ease-in-out;
+    }
+
+    /* For smaller devices like phones, show the full image */
+    @media screen and (max-width: 768px) {
+      .bg-slide {
+        background-size: contain;
+      }
     }
 
     .logo {
@@ -101,7 +109,7 @@
 
   <!-- Button Container -->
   <div class="button-container">
-    <a href="main.html.html" class="btn try">Try Charm</a>
+    <a href="main.html" class="btn try">Try Charm</a>
     <a href="about.html" class="btn about">About Us</a>
   </div>
 
@@ -115,9 +123,7 @@
       current = (current + 1) % images.length;
     }
 
-    // Start with the first image
     changeBackground();
-    // Then change every 3 seconds
     setInterval(changeBackground, 3000);
   </script>
 </body>
