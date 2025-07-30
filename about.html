@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us – Charm AI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      scroll-behavior: smooth;
+      background-color: #000;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 4rem;
+      border-radius: 20px;
+      max-width: 1000px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      color: #00d9ff;
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #f2f2f2;
+    }
+
+    .thankyou {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+    }
+
+    .thankyou h1 {
+      color: #00ffcc;
+    }
+
+    a.back {
+      margin-top: 3rem;
+      display: inline-block;
+      text-decoration: none;
+      background-color: #00ccff;
+      color: black;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    a.back:hover {
+      background-color: #0099cc;
+    }
+
+    #topBtn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #00ccff;
+      border: none;
+      color: #000;
+      padding: 12px 20px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 20px #00ccff;
+      display: none;
+      z-index: 999;
+    }
+
+    #topBtn:hover {
+      background: #0099cc;
+      box-shadow: 0 0 30px #00ccff;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+
+      .overlay {
+        padding: 2rem;
+      }
+
+      #topBtn {
+        padding: 10px 18px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Section 1: About the Team -->
+  <section style="background-image: url('background.jpg');">
+    <div class="overlay">
+      <h1>About the Team</h1>
+      <p>
+        We are Team Aviators — a passionate group of young innovators united by a shared love for technology and flight. For this year’s interschool event, we proudly present a handcrafted replica of the iconic F-117 Nighthawk stealth aircraft, built entirely from cardboard with attention to detail and structural creativity.
+        <br><br>
+        But we didn’t stop at design — we went further by developing ‘Charm’, an AI-powered assistant specifically tailored for aviation support and simulation. Charm can respond to aviation-related queries, assist in virtual flight briefings, and explain technical aircraft data in simple terms.
+        <br><br>
+        This fusion of creativity, engineering, and artificial intelligence showcases not only our technical skills but also our vision for the future of smart aviation. Our mission is to inspire innovation, think beyond limits, and prove that with teamwork and imagination, anything is possible.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 2: About Charm AI -->
+  <section style="background-image: url('bg2.jpg');">
+    <div class="overlay">
+      <h1>About Charm AI</h1>
+      <p>
+        Charm is an advanced voice-enabled AI assistant specifically designed for aviation environments, with a focus on supporting pilots during critical flight operations. Developed by Team Aviators, Charm utilizes cutting-edge artificial intelligence models through the OpenRouter API, integrating capabilities like natural language understanding, real-time audio interaction, and aviation-specific decision support.
+        <br><br>
+        The assistant is built using a combination of modern web technologies including HTML, CSS, and JavaScript, with back-end integrations powered by Python and RESTful API calls. Charm supports both aviation-specific queries (like controlling or troubleshooting the F-117 Nighthawk) and open-domain interactions, making it versatile and intelligent.
+        <br><br>
+        Designed with a futuristic UI, Charm not only provides fast and reliable voice responses but also features an immersive user experience with animated visuals, video backgrounds, and toggleable aviation modes. Charm is optimized for hands-free usage, making it a vital co-pilot in digital form, ideal for single-device cockpits.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 3: About the F-117 Nighthawk -->
+  <section style="background-image: url('bg1.jpg');">
+    <div class="overlay">
+      <h1>About the F-117 Nighthawk</h1>
+      <p>
+        The F-117 Nighthawk is a stealth aircraft known for its unique, sharp-angled design that helps it avoid radar detection. It was built by Lockheed for the U.S. Air Force and became the world’s first operational aircraft made specifically for stealth missions.
+        <br><br>
+        Although it doesn't look like a traditional fighter jet, the F-117 was designed to fly deep into enemy territory at night, strike with precision, and return without being detected. It was mainly used in secret missions and became famous for its role in real combat situations like Operation Desert Storm.
+        <br><br>
+        With its futuristic look and radar-evading features, the F-117 is considered one of the most iconic aircraft ever built. Its design has inspired many aviation and defense technologies around the world.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 4: Thank You -->
+  <section class="thankyou">
+    <div class="overlay">
+      <h1>Thank You</h1>
+      <p>
+        We would like to take this opportunity to express our heartfelt thanks to those who made this project possible and supported us throughout our journey.
+        <br><br>
+        First and foremost, we extend our sincere gratitude to our Director, <strong>Mr. Vinay Prabhudev</strong>, whose visionary leadership and commitment to nurturing innovation have been a great source of inspiration. His support continues to motivate us to aim higher and think beyond boundaries.
+        <br><br>
+        We are deeply thankful to our Principal, <strong>Mrs. Dorcus Preethi</strong>, for her constant encouragement and belief in our potential. Her guidance and leadership have created an environment where creativity and innovation can truly thrive.
+        <br><br>
+        A special thanks to our Coordinator, <strong>Mrs. Preeti</strong>, for her seamless coordination and tireless efforts in ensuring the smooth execution of our participation. Her support and dedication behind the scenes have been instrumental to our success.
+        <br><br>
+        We also wish to express our sincere appreciation to our ATL Mentor, <strong>Mr. Raghavendra N</strong>, for his valuable guidance, technical expertise, and mentorship. His continuous support helped us bring our ideas to life and navigate every challenge with confidence.
+        <br><br>
+        This project stands as a reflection of the collective encouragement and belief shown by each of these individuals. We are truly grateful.
+        <br><br>
+        — <strong>Team Aviators</strong>
+      </p>
+      <a href="index.html" class="back">← Back to Home</a>
+    </div>
+  </section>
+
+  <!-- Back to top button -->
+  <button id="topBtn" onclick="scrollToTop()">↑ Top</button>
+
+  <script>
+    // Scroll-triggered fade-in animation
+    const sections = document.querySelectorAll("section");
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, {
+      threshold: 0.2
+    });
+
+    sections.forEach(section => observer.observe(section));
+
+    // Back to top button behavior
+    const topBtn = document.getElementById("topBtn");
+
+    window.onscroll = () => {
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        topBtn.style.display = "block";
+      } else {
+        topBtn.style.display = "none";
+      }
+    };
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>

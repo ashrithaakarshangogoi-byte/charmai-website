@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Charm AI Assistant</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(ellipse at center, #010a17 0%, #000000 100%);
+      background-size: 200% 200%;
+      animation: bgMove 8s ease-in-out infinite;
+      color: white;
+      overflow: hidden;
+    }
+
+    @keyframes bgMove {
+      0%, 100% { background-position: center center; }
+      50% { background-position: top right; }
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .ring {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #011a3a 20%, #0060e0 45%, transparent 70%);
+      box-shadow:
+        0 0 60px #00c3ff,
+        0 0 90px #007fff,
+        inset 0 0 30px rgba(0, 170, 255, 0.6),
+        0 0 140px #00e1ff;
+      transition: all 0.4s ease;
+      opacity: 0.5;
+      transform: scale(0.95);
+      margin-bottom: 30px;
+    }
+
+    .ring.speaking {
+      animation: pulseRing 1.5s infinite ease-in-out;
+      opacity: 1;
+      transform: scale(1.2);
+    }
+
+    @keyframes pulseRing {
+      0% {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px #00e1ff, 0 0 100px #00e1ff;
+      }
+      50% {
+        transform: scale(1.3);
+        box-shadow: 0 0 80px #00e1ff, 0 0 140px #00e1ff;
+      }
+      100% {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px #00e1ff, 0 0 100px #00e1ff;
+      }
+    }
+
+    button {
+      background: linear-gradient(145deg, #00c6ff, #0072ff);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 36px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 8px;
+      box-shadow: 0 8px 20px rgba(0, 200, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(145deg, #009ee3, #005de0);
+      box-shadow: 0 10px 25px rgba(0, 200, 255, 0.5);
+    }
+
+    #response {
+      margin-top: 30px;
+      font-size: 1.1em;
+      color: #cceeff;
+      max-width: 80%;
+      text-shadow: 1px 1px 4px #000;
+      text-align: center;
+    }
+
+    .toggle-mode {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #000;
+      border: 1px solid #00e1ff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #00e1ff;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="toggle-mode" onclick="toggleMode()">Mode: <span id="modeText">Aviation</span></div>
+    <div class="ring" id="voiceRing"></div>
+    <button onclick="startListening()">🎙️ Talk to Charm</button>
+    <p id="response"></p>
+  </div>
+
+  <script>
+    const apiKey = "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";
+    const synth = window.speechSynthesis;
+    const ring = document.getElementById("voiceRing");
+    let isAviationMode = true;
+
+    function toggleMode() {
+      isAviationMode = !isAviationMode;
+      document.getElementById("modeText").innerText = isAviationMode ? "Aviation" : "Open Chat";
+    }
+
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voices = synth.getVoices();
+      utterance.voice = voices.find(v => v.name.includes("Female") || v.name.includes("Google")) || null;
+
+      utterance.onstart = () => {
+        ring.classList.add("speaking");
+        document.getElementById("response").innerText = text;
+      };
+
+      utterance.onend = () => ring.classList.remove("speaking");
+
+      synth.speak(utterance);
+    }
+
+    function askCharm(message) {
+      const systemPrompt = isAviationMode
+        ? `You are Charm, an AI co-pilot assistant for the F-117 Nighthawk stealth aircraft. Respond with clear, detailed flight instructions only. No general info.`
+        : `You are Charm, an open-domain AI assistant. Respond helpfully to any question the user asks.`;
+
+      fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: message }
+          ]
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        const reply = data.choices?.[0]?.message?.content || "No response.";
+        speak(reply);
+      })
+      .catch(() => speak("Sorry, I couldn't reach the server."));
+    }
+
+    function startListening() {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = "en-IN";
+      recognition.start();
+
+      recognition.onresult = (event) => {
+        const command = event.results[0][0].transcript;
+        askCharm(command);
+      };
+
+      recognition.onerror = () => {
+        speak("Sorry, I couldn't hear you properly.");
+      };
+    }
+
+    window.onload = () => speechSynthesis.getVoices();
+  </script>
+</body>
+</html>
