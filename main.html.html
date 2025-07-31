@@ -6,6 +6,7 @@
   <title>Charm AI Assistant</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
     body {
       margin: 0;
       font-family: 'Orbitron', sans-serif;
@@ -26,8 +27,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
       padding: 20px;
+      text-align: center;
     }
 
     .ring {
@@ -90,9 +92,8 @@
       margin-top: 30px;
       font-size: 1.1em;
       color: #cceeff;
-      max-width: 80%;
+      max-width: 90%;
       text-shadow: 1px 1px 4px #000;
-      text-align: center;
     }
 
     .toggle-mode {
@@ -108,6 +109,16 @@
       color: #00e1ff;
     }
 
+    @media (max-width: 600px) {
+      .ring {
+        width: 150px;
+        height: 150px;
+      }
+      button {
+        font-size: 16px;
+        padding: 12px 28px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -119,7 +130,7 @@
   </div>
 
   <script>
-    const apiKey = "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";
+    const apiKey = "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";
     const synth = window.speechSynthesis;
     const ring = document.getElementById("voiceRing");
     let isAviationMode = true;
@@ -132,22 +143,24 @@
     function speak(text) {
       const utterance = new SpeechSynthesisUtterance(text);
       const voices = synth.getVoices();
-      utterance.voice = voices.find(v => v.name.includes("Female") || v.name.includes("Google")) || null;
+      utterance.voice = voices.find(v => v.name.toLowerCase().includes("female")) || voices[0];
 
       utterance.onstart = () => {
         ring.classList.add("speaking");
         document.getElementById("response").innerText = text;
       };
 
-      utterance.onend = () => ring.classList.remove("speaking");
+      utterance.onend = () => {
+        ring.classList.remove("speaking");
+      };
 
       synth.speak(utterance);
     }
 
     function askCharm(message) {
       const systemPrompt = isAviationMode
-        ? `You are Charm, an AI co-pilot assistant for the F-117 Nighthawk stealth aircraft. Respond with clear, detailed flight instructions only. No general info.`
-        : `You are Charm, an open-domain AI assistant. Respond helpfully to any question the user asks.`;
+        ? "You are Charm, an AI co-pilot assistant for the F-117 Nighthawk stealth aircraft. Respond with clear, detailed flight instructions only. No general info."
+        : "You are Charm, an open-domain AI assistant. Respond helpfully to any question the user asks.";
 
       fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
@@ -163,12 +176,23 @@
           ]
         })
       })
-      .then(res => res.json())
-      .then(data => {
-        const reply = data.choices?.[0]?.message?.content || "No response.";
-        speak(reply);
+      .then(async res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        const data = await res.json();
+        console.log("API Response:", data);
+        if (data?.choices?.[0]?.message?.content) {
+          const reply = data.choices[0].message.content.trim();
+          speak(reply);
+        } else {
+          speak("Sorry, no valid response from the AI.");
+        }
       })
-      .catch(() => speak("Sorry, I couldn't reach the server."));
+      .catch((error) => {
+        console.error("Fetch error:", error);
+        speak("There was an error connecting to the AI. Please try again or check your API key.");
+      });
     }
 
     function startListening() {
@@ -186,7 +210,10 @@
       };
     }
 
-    window.onload = () => speechSynthesis.getVoices();
+    // Ensure voices are loaded
+    window.onload = () => {
+      window.speechSynthesis.getVoices();
+    };
   </script>
 </body>
 </html>
