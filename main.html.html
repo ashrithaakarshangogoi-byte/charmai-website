@@ -150,9 +150,7 @@
         document.getElementById("response").innerText = text;
       };
 
-      utterance.onend = () => {
-        ring.classList.remove("speaking");
-      };
+      utterance.onend = () => ring.classList.remove("speaking");
 
       synth.speak(utterance);
     }
@@ -196,7 +194,18 @@
     }
 
     function startListening() {
-      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      // Check if SpeechRecognition is supported
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        // Fallback: prompt the user to type their query
+        const typedQuery = prompt("Your device does not support voice recognition. Please type your query:");
+        if (typedQuery) {
+          askCharm(typedQuery);
+        }
+        return;
+      }
+      
+      const recognition = new SpeechRecognition();
       recognition.lang = "en-IN";
       recognition.start();
 
@@ -205,8 +214,17 @@
         askCharm(command);
       };
 
-      recognition.onerror = () => {
-        speak("Sorry, I couldn't hear you properly.");
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        // If the error indicates that voice recognition is not supported, fallback to prompt
+        if (event.error === "not-allowed" || event.error === "service-not-allowed" || event.error === "audio-capture") {
+          const typedQuery = prompt("Voice recognition is not available. Please type your query:");
+          if (typedQuery) {
+            askCharm(typedQuery);
+          }
+        } else {
+          speak("Sorry, I couldn't hear you properly.");
+        }
       };
     }
 
